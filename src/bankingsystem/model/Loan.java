@@ -8,6 +8,13 @@ package bankingsystem.model;
  *
  * @author ANH KIET
  */
-public class aaaaaaaa {
-    
+public class Loan {
+    private int id;
+    private Account account; // Composition
+    private String loanType;
+    private double amount;
+    private String status;
+
+    // Constructor, getters, and setters omitted for brevity
 }
+
