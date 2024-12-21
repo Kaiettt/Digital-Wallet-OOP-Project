@@ -14,7 +14,7 @@ public class SavingAccount extends Account {
         super(accountId, balance, accountType, user, bank);
         this.interestRate = interestRate;
     }
-
+    
     public double getInterestRate() {
         return interestRate;
     }

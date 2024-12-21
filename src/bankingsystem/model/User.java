@@ -20,6 +20,7 @@ public class User {
     private String address;
     private String password;
     private Role role; // Aggregation
+    private String gender;
     private List<Account> accounts;
     public int getId() {
         return id;
@@ -36,7 +37,13 @@ public class User {
         this.password = password;
         this.role = role;
     }
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
     
+    public String getGender(){
+        return this.gender;
+    }
     public void setId(int id) {
         this.id = id;
     }

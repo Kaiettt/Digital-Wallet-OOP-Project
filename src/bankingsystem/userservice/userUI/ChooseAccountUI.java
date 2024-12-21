@@ -1,13 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package bankingsystem.userservice.userUI;
 
-/**
- *
- * @author ANH KIET
- */import bankingsystem.model.Bank;
+import bankingsystem.model.Bank;
 import bankingsystem.model.CheckingAccount;
 import bankingsystem.model.User;
 import bankingsystem.userservice.userController.UserServiceHandle;
@@ -48,16 +41,16 @@ public class ChooseAccountUI extends JFrame {
         
         List<Bank> bankList = userService.getAllBanks();
         // Load accounts and add them to the container
-        int y = 20; // Vertical position for account sections
+        int verticalOffset = 20; // Vertical position for account sections
         List<CheckingAccount> accounts = userService.getAccountByUser(user);
         for (CheckingAccount account : accounts) {
-            addAccountSection(accountContainer, 20, y, account.getAccountId(), account,
-                "C:\\Users\\ANH KIET\\Downloads\\profile (1).png",bankList);
-            y += 170;
+            addAccountSection(accountContainer, 20, verticalOffset, account.getAccountId(), account, 
+                "C:\\Users\\ANH KIET\\Downloads\\profile (1).png", bankList);
+            verticalOffset += 170;
         }
 
         // Set preferred size for accountContainer
-        accountContainer.setPreferredSize(new Dimension(400, y));
+        accountContainer.setPreferredSize(new Dimension(400, verticalOffset));
 
         // Add accountContainer to a scroll pane
         JScrollPane scrollPane = new JScrollPane(accountContainer);
@@ -67,37 +60,62 @@ public class ChooseAccountUI extends JFrame {
         contentPane.add(scrollPane, BorderLayout.CENTER);
 
         // Create new account button
-        JButton btnCreateNewAccount = new JButton("Create new account");
-        btnCreateNewAccount.setBounds(125, 20, 200, 40);
-        btnCreateNewAccount.setBackground(new Color(96, 139, 193));
-        btnCreateNewAccount.setForeground(Color.WHITE);
-        btnCreateNewAccount.addActionListener(e -> {
-            
-            try {
-                new CreateAccountUI(bankList, user, this);
-            } catch (SQLException | ClassNotFoundException ex) {
-                Logger.getLogger(ChooseAccountUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
+        JButton btnCreateNewAccount = createNewAccountButton(bankList);
         contentPane.add(btnCreateNewAccount, BorderLayout.SOUTH);
 
         // Make the frame visible
         this.setVisible(true);
     }
 
-    private void addAccountSection(JPanel container, int x, int y, String id, CheckingAccount account, String profileImagePath,List<Bank> bankList) {
+    private JButton createNewAccountButton(List<Bank> bankList) {
+        JButton btnCreateNewAccount = new JButton("Create new account");
+        btnCreateNewAccount.setBounds(125, 20, 200, 40);
+        btnCreateNewAccount.setBackground(new Color(96, 139, 193));
+        btnCreateNewAccount.setForeground(Color.WHITE);
+        btnCreateNewAccount.addActionListener(e -> {
+            try {
+                new CreateAccountUI(bankList, user, this);
+            } catch (SQLException | ClassNotFoundException ex) {
+                Logger.getLogger(ChooseAccountUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        return btnCreateNewAccount;
+    }
+
+    private void addAccountSection(JPanel container, int x, int y, String accountId, CheckingAccount account, 
+                                   String profileImagePath, List<Bank> bankList) {
+        JLabel lblProfile = createProfileLabel(profileImagePath, x, y);
+        container.add(lblProfile);
+
+        JLabel lblAccountId = createAccountIdLabel(accountId, x, y);
+        container.add(lblAccountId);
+
+        JButton btnSelect = createSelectButton(x, y, account);
+        container.add(btnSelect);
+
+        JButton btnUpdate = createUpdateButton(x, y, account, bankList);
+        container.add(btnUpdate);
+
+        JButton btnDelete = createDeleteButton(x, y, account);
+        container.add(btnDelete);
+    }
+
+    private JLabel createProfileLabel(String profileImagePath, int x, int y) {
         JLabel lblProfile = new JLabel();
         lblProfile.setIcon(new ImageIcon(profileImagePath));
         lblProfile.setBounds(x, y, 120, 120);
-        container.add(lblProfile);
+        return lblProfile;
+    }
 
-        JLabel lblEmail = new JLabel(id);
-        lblEmail.setBounds(x + 130, y, 229, 41);
-        lblEmail.setForeground(new Color(0x003161));
-        lblEmail.setFont(new Font("Tahoma", Font.BOLD, 18));
-        container.add(lblEmail);
+    private JLabel createAccountIdLabel(String accountId, int x, int y) {
+        JLabel lblAccountId = new JLabel(accountId);
+        lblAccountId.setBounds(x + 130, y, 229, 41);
+        lblAccountId.setForeground(new Color(0x003161));
+        lblAccountId.setFont(new Font("Tahoma", Font.BOLD, 18));
+        return lblAccountId;
+    }
 
-        // SELECT button
+    private JButton createSelectButton(int x, int y, CheckingAccount account) {
         JButton btnSelect = new JButton("Chọn");
         btnSelect.setBounds(x + 130, y + 39, 75, 48);
         btnSelect.setBackground(new Color(0x608BC1));
@@ -110,26 +128,25 @@ public class ChooseAccountUI extends JFrame {
                 Logger.getLogger(ChooseAccountUI.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        container.add(btnSelect);
+        return btnSelect;
+    }
 
-        // UPDATE button
+    private JButton createUpdateButton(int x, int y, CheckingAccount account, List<Bank> bankList) {
         JButton btnUpdate = new JButton("Cập");
         btnUpdate.setBounds(x + 215, y + 39, 75, 48);
         btnUpdate.setBackground(new Color(0xFFE31A));
         btnUpdate.setForeground(Color.WHITE);
-        btnUpdate.addActionListener(e -> System.out.println("UPDATE button clicked"));
         btnUpdate.addActionListener(e -> {
             try {
                 new UpdateAccount(bankList, user, this, account);
-            } catch (SQLException ex) {
-                Logger.getLogger(ChooseAccountUI.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
+            } catch (SQLException | ClassNotFoundException ex) {
                 Logger.getLogger(ChooseAccountUI.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        container.add(btnUpdate);
+        return btnUpdate;
+    }
 
-        // DELETE button
+    private JButton createDeleteButton(int x, int y, CheckingAccount account) {
         JButton btnDelete = new JButton("Xóa");
         btnDelete.setBounds(x + 301, y + 39, 75, 48);
         btnDelete.setBackground(new Color(0xB03052));
@@ -143,6 +160,6 @@ public class ChooseAccountUI extends JFrame {
                 Logger.getLogger(ChooseAccountUI.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        container.add(btnDelete);
+        return btnDelete;
     }
 }

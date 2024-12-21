@@ -4,6 +4,7 @@
  */
 package bankingsystem.userservice.userController;
 
+import bankingsystem.adminservice.bank.main.Main;
 import bankingsystem.database.userDB.DBConnection;
 import bankingsystem.model.Role;
 import bankingsystem.model.User;
@@ -101,15 +102,22 @@ public class LoginSignupHandle {
         Connection conn = DBConnection.getConnection();
          
         User user = loadUserByUsernameAndPassword(username,password,conn);
-        if(user == null){
-             JOptionPane.showMessageDialog(null, "Người dùng không tồn tại", "Notification", JOptionPane.INFORMATION_MESSAGE);
-        }
-        System.out.println(user.getId() + user.getRole().getName());
-        if(user.getRole().getName().equals("USER")){
-            
-            ChooseAccountUI frame = new ChooseAccountUI(user);
-            frame.setLocationRelativeTo(null); // Center the window
+        if(user != null){
+             
+             System.out.println(user.getId() + user.getRole().getName());
+            if(user.getRole().getName().equals("USER")){
+
+                ChooseAccountUI frame = new ChooseAccountUI(user);
+                frame.setLocationRelativeTo(null); // Center the window
+            }
+            else {
+                Main adminUi = new Main();
+            }
             loginFrame.dispose();
+        }
+        
+        else {
+            JOptionPane.showMessageDialog(null, "Người dùng không tồn tại", "Notification", JOptionPane.INFORMATION_MESSAGE);
         }
         
     }

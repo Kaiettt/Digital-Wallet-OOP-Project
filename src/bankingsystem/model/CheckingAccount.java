@@ -20,5 +20,6 @@ public class CheckingAccount extends Account {
         System.out.println("Checking Account ID: " + getAccountId());
         System.out.println("Balance: " + getBalance());
     }
+    
 }
 

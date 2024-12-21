@@ -4,6 +4,7 @@
  */
 package bankingsystem.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,8 +19,13 @@ public class Bank {
     // Constructor, getters, and setters omitted for brevity
 
     public Bank() {
+        this.accounts = new ArrayList<>();
     }
 
+
+    public void addNewAccount(Account account){
+        this.accounts.add(account);
+    }
     public int getId() {
         return id;
     }

@@ -48,23 +48,6 @@ public class Payment extends JFrame {
     private JLabel recommendationLabel;
     private UserServiceHandle userService;
 
-    /**
-     * Launch the application.
-     */
-//    public static void main(String[] args) {
-//        EventQueue.invokeLater(() -> {
-//            try {
-//                Payment frame = new Payment();
-//                frame.setVisible(true);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        });
-//    }
-
-    /**
-     * Create the frame.
-     */
     public Payment(User user, CheckingAccount account) throws SQLException, ClassNotFoundException {
         this.userService = new UserServiceHandle();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -392,8 +375,17 @@ public class Payment extends JFrame {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 handleClick();
-
-                PaymentHandleUI.createAndShowGUI(name, account, main_account, user);
+                
+                PaymentHandleUI paymentHandleUI;
+                try {
+                    paymentHandleUI = new PaymentHandleUI();
+                    paymentHandleUI.createAndShowGUI(name, account, main_account, user);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Payment.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Payment.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
 
             }
 

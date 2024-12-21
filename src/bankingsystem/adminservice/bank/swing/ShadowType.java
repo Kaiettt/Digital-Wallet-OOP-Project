@@ -1,0 +1,6 @@
+
+package bankingsystem.adminservice.bank.swing;
+
+public enum ShadowType {
+     CENTER, TOP_RIGHT, TOP_LEFT, BOT_RIGHT, BOT_LEFT, BOT, TOP
+}

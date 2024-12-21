@@ -1,9 +1,5 @@
 package bankingsystem.model;
 
-
-import bankingsystem.model.Bank;
-import bankingsystem.model.User;
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -32,6 +28,13 @@ public abstract class Account {
         this.bank = bank;
     }
 
+
+    public void makeTrasaction(double money){
+        this.balance  = this.balance - money;
+    }
+    public void receiveMoney(double money){
+        this.balance = this.balance + money;
+    }
     // Getters and setters
     public String getAccountId() {
         return accountId;

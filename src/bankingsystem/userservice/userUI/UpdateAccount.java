@@ -8,7 +8,6 @@ package bankingsystem.userservice.userUI;
  *
  * @author ANH KIET
  */
-import bankingsystem.model.Account;
 import bankingsystem.model.Bank;
 import bankingsystem.model.CheckingAccount;
 import bankingsystem.model.User;
@@ -17,7 +16,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.util.List;

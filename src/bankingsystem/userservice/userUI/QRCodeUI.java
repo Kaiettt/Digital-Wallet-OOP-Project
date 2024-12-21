@@ -99,6 +99,4 @@ public class QRCodeUI {
         // Display the frame
         frame.setVisible(true);
     }
-
-
 }

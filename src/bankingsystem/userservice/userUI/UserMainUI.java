@@ -9,9 +9,14 @@ package bankingsystem.userservice.userUI;
  * @author ANH KIET
  */
 import bankingsystem.model.CheckingAccount;
+import bankingsystem.model.Loan;
+import bankingsystem.model.SavingAccount;
 import bankingsystem.model.Transaction;
 import bankingsystem.model.User;
 import bankingsystem.userservice.userController.UserServiceHandle;
+import bankingsystem.userservice.userUI.featuregroup.InformationAccount;
+import bankingsystem.userservice.userUI.featuregroup.ShowSavingGoals;
+import bankingsystem.userservice.userUI.featuregroup.Wallet;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -77,21 +82,25 @@ public class UserMainUI extends JFrame {
     
 
 public void addNavigationButtons() {
-    JButton btnMoMo = createIconButton("User ", "👤", new Color(235, 87, 87));
-    btnMoMo.setBounds(39, 256, 80, 50);  // Increased y value by 20
-    contentPane.add(btnMoMo);
+    JButton userbtn = createIconButton("User ", "👤", new Color(235, 87, 87));
+    userbtn.setBounds(39, 256, 80, 50);  // Increased y value by 20
+    userbtn.addActionListener(e -> {
+            new InformationAccount(this.user,this.account,this);
+            this.dispose();
+    });
+    contentPane.add(userbtn);
 
-    JButton btnBank = createIconButton("Receive ", "📥", new Color(47, 128, 237));
-    btnBank.setBounds(123, 256, 80, 50);  // Increased y value by 20
-    btnBank.addActionListener(e -> {
+    JButton receivebtn = createIconButton("Receive ", "📥", new Color(47, 128, 237));
+    receivebtn.setBounds(123, 256, 80, 50);  // Increased y value by 20
+    receivebtn.addActionListener(e -> {
             QRCodeUI qrcodeUI = new QRCodeUI(this.user, this.account);
             this.dispose();
     });
-    contentPane.add(btnBank);
+    contentPane.add(receivebtn);
 
-    JButton btnQR = createIconButton("Payment ", "💳", new Color(39, 174, 96));
-    btnQR.setBounds(206, 256, 80, 50);  // Increased y value by 20
-    btnQR.addActionListener(e -> {
+    JButton paymentbtn = createIconButton("Payment ", "💳", new Color(39, 174, 96));
+    paymentbtn.setBounds(206, 256, 80, 50);  // Increased y value by 20
+    paymentbtn.addActionListener(e -> {
         try {
             Payment renderUI = new Payment(this.user, this.account);
             this.dispose();
@@ -101,14 +110,23 @@ public void addNavigationButtons() {
             Logger.getLogger(UserMainUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     });
-    contentPane.add(btnQR);
+    contentPane.add(paymentbtn);
 
-    JButton btnGift = createIconButton("Wallet ", "💰", new Color(235, 87, 87));
-    btnGift.setBounds(39, 319, 80, 50);  // Increased y value by 20
-    contentPane.add(btnGift);
-    JButton btnGift1 = createIconButton("History ", "🕰️", new Color(47, 128, 237));
-    btnGift1.setBounds(123, 319, 80, 50);  // Increased y value by 20
-    btnGift1.addActionListener(e -> {
+    JButton walletbtn = createIconButton("Wallet ", "💰", new Color(235, 87, 87));
+    walletbtn.setBounds(39, 319, 80, 50);  // Increased y value by 20
+    walletbtn.addActionListener(e -> {
+            Loan loan = userServiceHandle.getLoanByAccountId(account);
+            if(loan == null){
+                loan = new Loan();
+                loan.setAmount(0);
+            }
+            new Wallet(account, loan,this,this.user);
+            this.dispose();
+    });
+    contentPane.add(walletbtn);
+    JButton historybtn = createIconButton("History ", "🕰️", new Color(47, 128, 237));
+    historybtn.setBounds(123, 319, 80, 50);  // Increased y value by 20
+    historybtn.addActionListener(e -> {
             List<Transaction> transactionsHistory = new ArrayList<>();
         try {
             transactionsHistory = userServiceHandle.getTransactionsbyAccount(this.account);
@@ -120,11 +138,16 @@ public void addNavigationButtons() {
             MomoTransactionUI transactionUI = new MomoTransactionUI(transactionsHistory,this.user,this.account);
             this.dispose();
     });
-    contentPane.add(btnGift1);
+    contentPane.add(historybtn);
 
-    JButton btnGift2 = createIconButton("Saving ", "💸", new Color(39, 174, 96));
-    btnGift2.setBounds(206, 319, 80, 50);  // Increased y value by 20
-    contentPane.add(btnGift2);
+    JButton savingButton = createIconButton("Saving ", "💸", new Color(39, 174, 96));
+    savingButton.addActionListener(e -> {
+            SavingAccount saving_account = userServiceHandle.getSavingAccountByUser(user);
+            new ShowSavingGoals(this, saving_account);
+            this.dispose();
+    });
+    savingButton.setBounds(206, 319, 80, 50);  // Increased y value by 20
+    contentPane.add(savingButton);
 
 
     
@@ -209,12 +232,12 @@ public void addNavigationButtons() {
         styleButton(accountButton);
         cardPanel.add(accountButton);
 
-        JButton btnGift4 = createIconButton("", "🔔", new Color(0x1F509A),"asd");
+        JButton notibtn = createIconButton("", "🔔", new Color(0x1F509A),"asd");
         int buttonWidth = 50;
         int buttonHeight = 50;
         int frameWidth = 350;
-        btnGift4.setBounds(frameWidth - buttonWidth - 30, 10, buttonWidth, buttonHeight); // 10px padding from top-right
-        contentPane.add(btnGift4);
+        notibtn.setBounds(frameWidth - buttonWidth - 30, 10, buttonWidth, buttonHeight); // 10px padding from top-right
+        contentPane.add(notibtn);
 
         JButton btnLogout  = createIconButton("", "↩️", new Color(0x1F509A),"asd");
         btnLogout.setBounds(10, 10, 50, 50);// 10px padding from top-right
@@ -236,7 +259,7 @@ public void addNavigationButtons() {
         button.setBorder(BorderFactory.createLineBorder(new Color(34, 153, 84), 1));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
-    
+        
     private void addUserInfoLabels() {
         // Background panel for user information
         JPanel messagePanel = new JPanel();

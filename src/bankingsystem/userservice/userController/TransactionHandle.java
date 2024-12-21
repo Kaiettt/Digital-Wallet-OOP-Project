@@ -75,11 +75,8 @@ public class TransactionHandle {
     
     
     public Transaction CreateTransaction(String money, CheckingAccount from_account, Account to_account) throws SQLException, ClassNotFoundException {
-    double from_money = from_account.getBalance()-Double.parseDouble(money);
-    double to_money = to_account.getBalance()+Double.parseDouble(money);
-    System.out.println(".()");
-    from_account.setBalance(from_money);
-    to_account.setBalance(to_money);
+    from_account.makeTrasaction(Double.parseDouble(money));
+    to_account.receiveMoney(Double.parseDouble(money));
     accountHandle.updateBalance(from_account,to_account);
     Transaction transaction = new Transaction();
     transaction.setAmount(Double.parseDouble(money));

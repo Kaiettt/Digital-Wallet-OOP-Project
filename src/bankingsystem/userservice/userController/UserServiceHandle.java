@@ -7,6 +7,8 @@ package bankingsystem.userservice.userController;
 import bankingsystem.model.Account;
 import bankingsystem.model.Bank;
 import bankingsystem.model.CheckingAccount;
+import bankingsystem.model.Loan;
+import bankingsystem.model.SavingAccount;
 import bankingsystem.model.Transaction;
 import bankingsystem.model.User;
 import java.sql.SQLException;
@@ -20,12 +22,14 @@ import javax.swing.JFrame;
 public class UserServiceHandle {
 
     private LoginSignupHandle loginSignupHandle;
+    private LoanHandle loanHandle;
     private AccountHandle accountHandle;
     private TransactionHandle transactionHandle;
     private UserDbHandle userDbHandle;
     private BankHandle bankHandle;
     public UserServiceHandle() throws SQLException, ClassNotFoundException {
         this.loginSignupHandle = new LoginSignupHandle();
+        this.loanHandle = new LoanHandle();
         this.accountHandle = new AccountHandle();
         this.transactionHandle = new TransactionHandle();
         this.userDbHandle = new UserDbHandle();
@@ -79,4 +83,16 @@ public class UserServiceHandle {
     public void handleUpdateAccount(CheckingAccount account) {
         this.accountHandle.updateAccount(account);
     }
+
+    public void createNewLoan(double amount,CheckingAccount account){
+        this.loanHandle.addNewLoan(amount,account);
+    }
+    public Loan getLoanByAccountId(CheckingAccount account){
+        return this.loanHandle.getLoanByAccountId(account);
+    }
+
+    public SavingAccount getSavingAccountByUser(User user) {
+        return this.accountHandle.getSavingAccountByUser(user);
+    }
+    
 }

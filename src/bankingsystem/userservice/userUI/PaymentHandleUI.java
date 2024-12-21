@@ -10,7 +10,9 @@ package bankingsystem.userservice.userUI;
  */
 
 import bankingsystem.model.CheckingAccount;
+import bankingsystem.model.Loan;
 import bankingsystem.model.User;
+import bankingsystem.userservice.userController.UserServiceHandle;
 import java.awt.*;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -21,8 +23,12 @@ public class PaymentHandleUI {
 //    public static void main(String[] args) {
 //        SwingUtilities.invokeLater(() -> createAndShowGUI());
 //    }
-
-    static void createAndShowGUI(String name,CheckingAccount account,CheckingAccount main_account,User user) {
+    private UserServiceHandle userServiceHandle;
+    public PaymentHandleUI() throws SQLException, ClassNotFoundException{
+        this.userServiceHandle = new UserServiceHandle();
+    }
+     void createAndShowGUI(String name,CheckingAccount account,CheckingAccount main_account,User user)  {
+        
         
         System.out.println(account.getAccountId());
         JFrame frame = new JFrame("Thanh toán");
@@ -163,16 +169,28 @@ public class PaymentHandleUI {
                     try {
                         double amount = Double.parseDouble(amountField.getText());
                         if (amount > main_account.getBalance()) {
-                            JOptionPane.showMessageDialog(null, 
-                                "Insufficient balance in the account.", 
-                                "Transaction Error", 
-                                JOptionPane.ERROR_MESSAGE);
+                        int option = JOptionPane.showConfirmDialog(
+                            null,
+                            "Số dư không đủ, bạn có muốn mượn tiền không?",
+                            "Transaction Error",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.ERROR_MESSAGE
+                        );
+
+                        if (option == JOptionPane.YES_OPTION) {
+                            // Handle loan logic
+                            handleLoan(amount - main_account.getBalance(), main_account);
+
+                            // Update account balance
+                            main_account.setBalance(amount);
                         }
-                        else{
-                            frame.dispose();        
-                            PaymentUI UI = new PaymentUI(amountField.getText(),main_account,account,name,user);
+                        // No need to explicitly wait as the code proceeds after the dialog closes
+                    }
+
+                    // Proceed with the remaining code after the dialog
+                    frame.dispose();
+                    PaymentUI UI = new PaymentUI(amountField.getText(), main_account, account, name, user);
                             
-                        }
                     } catch (NumberFormatException e) {
                         JOptionPane.showMessageDialog(null, 
                             "Invalid amount entered. Please enter a valid number.", 
@@ -181,7 +199,6 @@ public class PaymentHandleUI {
                         return; // Exit the method
                     }
                     
-        
                 } catch (SQLException ex) {
                     Logger.getLogger(PaymentHandleUI.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ClassNotFoundException ex) {
@@ -241,6 +258,9 @@ public class PaymentHandleUI {
         });
         frame.add(backbtn);
         frame.setVisible(true);
+    }
+    public void handleLoan(double money,CheckingAccount account){
+        this.userServiceHandle.createNewLoan(money, account);
     }
 }
 

@@ -9,6 +9,7 @@ import bankingsystem.database.userDB.DatabaseConnection;
 import bankingsystem.model.Account;
 import bankingsystem.model.Bank;
 import bankingsystem.model.CheckingAccount;
+import bankingsystem.model.SavingAccount;
 import bankingsystem.model.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -272,6 +273,53 @@ public void deleteAccountbyId(String id) {
         }
     }
 }
+
+    public SavingAccount getSavingAccountByUser(User user) {
+    SavingAccount savingAccount = null; // To store the result
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    try {
+        // Initialize the database connection
+        conn = DatabaseConnection.initializeDatabaze();
+        
+        // SQL query to retrieve the saving account details
+        String sql = "SELECT account_id, balance, account_type, interest_rate FROM saving_accounts WHERE user_id = ?";
+        pstmt = conn.prepareStatement(sql);
+        
+        // Set the parameter for user_id
+        pstmt.setInt(1, user.getId());
+        
+        // Execute the query
+        rs = pstmt.executeQuery();
+        
+        // Check if a result is returned
+        if (rs.next()) {
+            String accountId = rs.getString("account_id");
+            double balance = rs.getDouble("balance");
+            String accountType = rs.getString("account_type");
+            double interestRate = rs.getDouble("interest_rate");
+
+            // Create and populate the SavingAccount object
+            savingAccount = new SavingAccount(accountId,balance,accountType,user,new Bank(),interestRate);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace(); // Log the exception (use a logger in real applications)
+    } finally {
+        // Close resources to prevent memory leaks
+        try {
+            if (rs != null) rs.close();
+            if (pstmt != null) pstmt.close();
+            if (conn != null) conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace(); // Log the exception
+        }
+    }
+
+    return savingAccount;
+}
+
 
 
 }
