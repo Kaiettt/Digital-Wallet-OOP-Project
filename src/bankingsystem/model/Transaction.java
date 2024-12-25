@@ -39,6 +39,20 @@ public class Transaction {
         this.time = time;
     }
     
+    public String getTransactionDetail() {
+    StringBuilder details = new StringBuilder();
+    details.append("Transaction Details:\n")
+           .append("ID: ").append(id).append("\n")
+           .append("Amount: ").append(amount).append("\n")
+           .append("Transaction Type: ").append(transactionType).append("\n")
+           .append("From Account: ")
+           .append(fromAccount != null ? fromAccount.getAccountId(): "N/A").append("\n") // Assuming Account has getId()
+           .append("To Account: ")
+           .append(toAccount != null ? toAccount.getAccountId(): "N/A").append("\n") // Assuming Account has getId()
+           .append("Timestamp: ").append(time != null ? time.toString() : "N/A");
+    return details.toString();
+}
+
     public int getId() {
         return id;
     }

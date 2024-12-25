@@ -26,6 +26,9 @@ public class Bank {
     public void addNewAccount(Account account){
         this.accounts.add(account);
     }
+    public void removeAccount(Account account){
+        this.accounts.remove(account);
+    }
     public int getId() {
         return id;
     }
